@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+*.swp
+._*
+
+**/.DS_Store
+**/*.swp
+**/._*
+
+.vscode/
+
+*.pyc
+__pycache__
+**/*.pyc
+**/__pycache__
+
+/.env*
+/log/*
+/tmp/*

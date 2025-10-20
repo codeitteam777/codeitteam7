@@ -1,0 +1,42 @@
+# 최상위에 있는 파일로 명시
+root = true
+
+# 모든 파일에 적용
+[*]
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+max_line_length = 80
+
+[*.py]
+max_line_length = 120
+
+[*.json]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+max_line_length = off
+
+[*.{yaml,yml}]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+max_line_length = off
+
+# 'Makefile'과 일치하는 파일 혹은 폴더에 적용
+[Makefile]
+indent_style = tab
+indent_size = 8
+
+# web파일
+[*.{html,htm,js,ts,css}]
+indent_style = space
+indent_size = 2
+max_line_length = 120
