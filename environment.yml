@@ -12,6 +12,7 @@ dependencies:
       - tqdm
       - scipy
       - scikit-learn
-      - opencv-python
       - seaborn
       - jupyter
+      - opencv-python
+      - albumentations
