@@ -7,7 +7,11 @@ dependencies:
   - pip
   - pip:
       - numpy
+      - pandas
       - matplotlib
       - tqdm
       - scipy
-      - pandas
+      - scikit-learn
+      - opencv-python
+      - seaborn
+      - jupyter
