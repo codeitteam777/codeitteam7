@@ -16,3 +16,5 @@ dependencies:
       - jupyter
       - opencv-python
       - albumentations
+      - torch
+      - torchvision
