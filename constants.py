@@ -1,7 +1,8 @@
 import os
 
 # 1. 경로 상수 (사용자 환경에 맞게 이 값만 수정합니다)
-PROJECT_ROOT = "/Users/bellboi/code/codeitteam7"
+# PROJECT_ROOT = "/Users/bellboi/code/codeitteam7"
+PROJECT_ROOT = os.getcwd()  # 현재 작업 디렉토리를 프로젝트 루트로 설정
 # r"C:\Users\daboi\Desktop\ai05-level1-project"
 
 # 데이터 폴더 경로 (PROJECT_ROOT 기준)
@@ -11,12 +12,12 @@ TEMP_DATA_PATH = os.path.join(PROJECT_ROOT, "data", "temp")
 OUTPUTS_DIR = os.path.join(PROJECT_ROOT, "outputs") # outputs 경로를 절대 경로로 정의
 
 # 특정 데이터 폴더
-TRAIN_IMG_DIR = os.path.join(PROJECT_ROOT, "train_images")
-TEST_IMG_DIR = os.path.join(PROJECT_ROOT, "test_images")
+TRAIN_IMG_DIR = os.path.join(RAW_DATA_PATH, "train_images")
+TEST_IMG_DIR = os.path.join(RAW_DATA_PATH, "test_images")
 
 # 모델 저장 및 제출 경로 (Exp 대신 Outputs 사용 권장)
-EXP_BASE_DIR = os.path.join(PROJECT_ROOT, "Exp", "codeitteam7exp1") # 기존 Exp 유지
-SUBMISSION_DIR = os.path.join(EXP_BASE_DIR, "submissions")
+EXP_BASE_DIR = os.path.join(OUTPUTS_DIR, "Exp", "codeitteam7exp1") # 기존 Exp 유지
+SUBMISSION_DIR = os.path.join(OUTPUTS_DIR, "submissions")
 
 # IoU 및 OOB 분석 결과, 학습 데이터셋에서 제외할 오류 파일 목록
 IOU_ERROR_FILES = [

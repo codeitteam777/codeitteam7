@@ -1,4 +1,3 @@
-import platform
 import sys
 import os
 import json
@@ -6,10 +5,6 @@ import glob
 from tqdm import tqdm  # 진행 상황 표시
 from collections import defaultdict, Counter
 import pandas as pd # 분석을 위해 pandas 사용
-import matplotlib.pyplot as plt
-import cv2
-import random
-import matplotlib
 
 
 # 프로젝트 루트(상위 디렉토리)를 sys.path에 추가
@@ -19,15 +14,7 @@ project_root = os.path.abspath(
 sys.path.insert(0, project_root)
 
 # 이제 import 가능
-from constants import RAW_DATA_PATH, TEMP_DATA_PATH, PROCESSED_DATA_PATH
-from src.utils import setup_matplotlib_korean_font
-
-# QT 관련 환경 변수 설정
-os.environ['QT_ENABLE_HIGHDPI_SCALING'] = '0'
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-
-# 백엔드 설정. plt.show() 없이 이미지 저장을 위해 'Agg' 사용
-matplotlib.use('Agg')
+from constants import RAW_DATA_PATH, TEMP_DATA_PATH, TRAIN_IMG_DIR, TEST_IMG_DIR
 
 class InitDataset:
     """데이터셋 초기화 및 메타데이터 수집 클래스"""
@@ -46,8 +33,8 @@ class InitDataset:
 
         source_dir = RAW_DATA_PATH
 
-        train_img_dir = os.path.join(source_dir, "train_images")
-        test_img_dir = os.path.join(source_dir, "test_images")
+        train_img_dir = TRAIN_IMG_DIR
+        test_img_dir = TEST_IMG_DIR
         train_ann_dir = os.path.join(source_dir, "train_annotations")
 
         return train_img_dir, test_img_dir, train_ann_dir
@@ -252,159 +239,9 @@ class InitDataset:
 
         return master_data
 
-
-    def check_train_image(self, master_data):
-        """
-        학습 이미지 샘플 3개를 무작위로 골라 시각화하여 표시
-        Args:
-            master_data: 통합된 학습 데이터 딕셔너리
-        Returns:
-            None
-        """
-
-        # 한글 폰트 설정
-        setup_matplotlib_korean_font()
-
-        # 마이너스 부호 깨짐 방지
-        plt.rcParams['axes.unicode_minus'] = False
-
-        # 시각화할 이미지 파일 경로 목록 생성
-        # master_data의 키(파일 이름)들을 리스트로 가져온다
-        all_filenames = list(master_data.keys())
-
-        # 전체 파일 목록 중 3개를 랜덤으로 선택
-        if len(all_filenames) >= 3:
-            sample_filenames = random.sample(all_filenames, 3)
-        else:
-            # 파일이 3개 미만일 경우 전체 파일을 사용
-            sample_filenames = all_filenames
-
-        train_img_dir, test_img_dir, train_ann_dir = self.get_dir_path()
-
-        # image_path를 재구성
-        sample_image_paths = [
-            os.path.join(train_img_dir, filename) for filename in sample_filenames
-        ]
-
-        # 이미지 로드 및 플로팅
-        plt.figure(figsize = (15, 6))
-        plot_index = 1
-
-        for i, img_path in enumerate(sample_image_paths):
-            # OpenCV를 사용하여 이미지 로드
-            img = cv2.imread(img_path)
-
-            # 파일 로드 실패 검사 (안정성 확보)
-            if img is None:
-                print(f"파일 로드 실패 - '{img_path}'")
-                continue
-
-            # BGR -> RGB 변환
-            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-            # 서브플롯에 표시
-            plt.subplot(1, 3, plot_index)
-            plt.imshow(img_rgb)
-
-            # 파일 이름에서 경로와 확장자 제거하여 제목으로 사용
-            title = os.path.basename(img_path)
-            plt.title(title, fontsize = 12)
-            plt.axis('off')
-
-            plot_index += 1
-
-        plt.tight_layout()
-        temp_file = os.path.join(TEMP_DATA_PATH, 'random_sample_images.png')
-        plt.savefig(temp_file, dpi=150)
-        # plt.show()
-        print(temp_file + " 파일로 샘플 이미지 저장 완료")
-
-
-    def check_bbox(self):
-        """학습 이미지 샘플 2개를 무작위로 골라 BBox 시각화하여 표시"""
-
-        train_img_dir, test_img_dir, train_ann_dir = self.get_dir_path()
-
-        # self.class_to_id의 key(이름)와 value(id)를 뒤집은 id_to_class 맵
-        id_to_class = {v: k for k, v in self.class_to_id.items()}
-
-        # 시각화할 샘플 이미지 선정
-        images_by_count = defaultdict(list)
-        for img_filename, data in master_data.items():
-            pill_count = len(data['annotations'])
-            if pill_count > 0:  # 어노테이션이 1개 이상 있는 이미지만
-                images_by_count[pill_count].append(img_filename)
-
-        # 알약 2개짜리, 4개짜리 이미지 파일명을 랜덤으로 하나씩 선택
-        try:
-            sample_2_pill = random.choice(images_by_count[2])
-            sample_4_pill = random.choice(images_by_count[4])
-            sample_filenames = [sample_2_pill, sample_4_pill]
-            print(f"시각화 샘플 선정 완료: {sample_filenames}")
-        except Exception as e:
-            print(f"샘플 선정 오류: {e}. (2개 또는 4개짜리 이미지가 없을 수 있음)")
-            sample_filenames = random.sample(list(master_data.keys()), 2)  # 대안: 그냥 2개 랜덤
-
-        # BBox 시각화 및 저장
-        plt.figure(figsize=(16, 10))
-
-        # BBox 색상 (BGR)
-        COLORS = [
-            (255, 0, 0),    # Blue
-            (0, 255, 0),    # Green
-            (0, 0, 255),    # Red
-            (255, 255, 0)   # Yellow
-        ]
-
-        for i, img_filename in enumerate(sample_filenames):
-            img_path = os.path.join(train_img_dir, img_filename)
-
-            # 이미지 로드 (BGR)
-            image = cv2.imread(img_path)
-            if image is None:
-                print(f"오류: '{img_path}' 파일을 로드할 수 없음")
-                continue
-
-            annotations = master_data[img_filename]['annotations']
-
-            # OpenCV에서 BGR로 박스 그리기
-            for j, ann in enumerate(annotations):
-                x, y, w, h = map(int, ann['bbox'])
-                class_id = ann['class_id']
-                class_name = id_to_class.get(class_id, "Unknown")
-
-                color = COLORS[j % len(COLORS)]  # BGR
-                cv2.rectangle(image, (x, y), (x + w, y + h), color, thickness=3)
-
-                # 텍스트는 matplotlib에서 RGB 색상으로 표시
-                ann['class_name'] = class_name
-                ann['color'] = (color[2]/255, color[1]/255, color[0]/255)  # RGB 변환
-
-            # subplot에 표시
-            plt.subplot(1, 2, i + 1)
-            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            plt.imshow(image_rgb)
-            plt.title(f"'{img_filename}'\n(Pills: {len(annotations)})", fontsize=12)
-            plt.axis('off')
-
-            # 텍스트 올리기
-            for ann in annotations:
-                x, y, w, h = map(int, ann['bbox'])
-                plt.text(x, y - 10, ann['class_name'],
-                        color='black',
-                        fontsize=10,
-                        bbox=dict(facecolor=ann['color'], alpha=0.7, pad=0.1))
-
-        plt.tight_layout()
-        output_filename = os.path.join(TEMP_DATA_PATH, 'bbox_visualization_samples.png')
-        plt.savefig(output_filename)
-        print(f"'{output_filename}' 파일로 시각화 결과 저장")
-
 if __name__ == "__main__":
 
     # from src.data.init_dataset import InitDataset
 
     init_dataset = InitDataset()
     master_data = init_dataset.integrate_data()
-    # init_dataset.check_train_image(master_data)
-    # init_dataset.check_bbox()
