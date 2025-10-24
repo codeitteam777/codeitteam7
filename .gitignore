@@ -21,4 +21,5 @@ __pycache__
 
 # 데이터 폴더 내의 원본 및 전처리된 데이터 모두 제외
 data/raw/
+data/temp/
 data/processed/
