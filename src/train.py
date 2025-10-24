@@ -8,6 +8,20 @@ import pandas as pd
 from tqdm import tqdm
 from ultralytics import YOLO
 
+
+# 프로젝트 루트(상위 디렉토리)를 sys.path에 추가
+project_root = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..')
+)
+sys.path.insert(0, project_root)
+
+
+from src.preprocessing.dataset import create_yolo_dataset_structure, get_cleaned_data_and_counts
+from src.utils.data_split_utils import prepare_stratified_split
+from src.utils.device import get_device
+
+# from src.utils.data_split_utils import prepare_stratified_split
+
 # --- 상수 Import: constants.py에서 필요한 모든 상수를 가져옵니다. ---
 from constants import (
     PROJECT_ROOT, EXP_BASE_DIR, SUBMISSION_DIR, PROCESSED_DATA_PATH,
@@ -20,8 +34,8 @@ try:
     # InitDataset (src/data/init_dataset.py)을 로드합니다.
     from src.data.init_dataset import InitDataset
     # 기존에 논의된 전처리/유틸리티 모듈을 로드합니다.
-    from src.preprocessing.dataset import get_cleaned_data_and_counts, create_yolo_dataset_structure
-    from src.utils.data_split_utils import prepare_stratified_split
+    # from src.preprocessing.dataset import get_cleaned_data_and_counts, create_yolo_dataset_structure
+    # from src.utils.data_split_utils import prepare_stratified_split
 except ImportError as e:
     print(f"Error importing local modules: {e}")
     print("WARNING: Assuming helper functions are available for structure demonstration.")
@@ -74,8 +88,7 @@ try:
     print("\n[STEP 2/3] 오류 파일 제거 및 Stratified Split 준비")
     # FILES_TO_EXCLUDE 상수를 사용하여 오류 이미지 제거를 가정합니다.
     clean_master_data, class_count_lookup = get_cleaned_data_and_counts(
-        master_data,
-        FILES_TO_EXCLUDE
+        master_data
     )
 
     # 2단계: Stratified Split을 위한 파일명 및 레이블 준비 (data_split_utils.py)
@@ -113,12 +126,15 @@ except NameError as e:
 print("\n학습 시작")
 model = YOLO(YOLO_VER)
 
+device = get_device()
+model.to(device)
+
 results = model.train(
     data=yaml_path,
     epochs=experiment_config['epochs'],
     imgsz=experiment_config['imgsz'],
     batch=experiment_config['batch'],
-    device=experiment_config['device'],
+    device=device,
     project=model_save_dir,
     name=experiment_config['project_name'],
     exist_ok=True,

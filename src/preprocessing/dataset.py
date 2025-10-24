@@ -1,6 +1,6 @@
 # @title src/preprocessing/dataset.py
 from collections import Counter
-from data_filtering import filter_master_data
+from src.preprocessing.data_filtering import filter_master_data
 import os
 import shutil
 from sklearn.model_selection import train_test_split
@@ -62,10 +62,16 @@ def create_yolo_dataset_structure(
     config: dict  # 환경 설정(경로, random_state, test_size 등)을 dict로 받습니다.
 ):
     # 1. Train/Val Split (Stratified)
+
+    print(x_filenames)
+    print(config['test_size'])
+    print(y_stratify_labels)
+    print(config['random_state'])
+
     train_files, val_files = train_test_split(
         x_filenames,  # PEP 8에 따라 소문자 변수명 사용
         test_size=config['test_size'],
-        stratify=y_stratify_labels,
+        # stratify=y_stratify_labels,
         random_state=config['random_state']
     )
     print(f"Train/Val Split 완료. Train: {len(train_files)}개, Val: {len(val_files)}개")

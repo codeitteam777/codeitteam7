@@ -1,4 +1,13 @@
 import pandas as pd
+import os
+import sys
+
+# 프로젝트 루트(상위 디렉토리)를 sys.path에 추가
+project_root = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..')
+)
+sys.path.insert(0, project_root)
+
 from constants import FILES_TO_EXCLUDE
 
 
