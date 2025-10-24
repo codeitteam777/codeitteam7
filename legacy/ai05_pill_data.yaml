@@ -1,0 +1,14 @@
+# @title ai05_pill_data.yaml (최종 수정)
+# YOLO 학습에 사용할 데이터셋 설정 파일
+
+# 1. 최상위 데이터 경로 (절대 경로)
+path: /Users/bellboi/data/ai05-level1-project
+
+# 2. 학습(train) 및 검증(val) 데이터셋 경로
+# 폴더 이름을 images/labels로 바꾸었으므로, YOLOv8이 자동으로 인식합니다.
+train: images
+val: images
+
+# 3. 클래스 정보 (실제 데이터셋에 맞게 수정 필요)
+nc: 2   # Number of classes
+names: ['알약_A', '알약_B']
