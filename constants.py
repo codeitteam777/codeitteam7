@@ -1,6 +1,7 @@
 # 데이터 경로
 RAW_DATA_PATH = "data/raw/"
 PROCESSED_DATA_PATH = "data/processed/"
+TEMP_DATA_PATH = "data/temp/"
 
 # IoU 및 OOB 분석 결과, 학습 데이터셋에서 제외할 오류 파일 목록
 IOU_ERROR_FILES = [
