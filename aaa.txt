@@ -1,0 +1,20 @@
+commit 07606f7ce7842204f49b9a731c471debd14d03a8
+Merge: 5eadfb8 a85d557
+Author: agarcircleDev <agarcircle@gmail.com>
+Date:   Sun Nov 2 19:53:56 2025 +0900
+
+    WIP on dataset_cjy: 5eadfb8 알약 검증 프로젝트 실험 최종
+
+diff --cc .idea/codeitteam7.iml
+index d0876a7,d0876a7..8b8c395
+--- a/.idea/codeitteam7.iml
++++ b/.idea/codeitteam7.iml
+@@@ -5,4 -5,4 +5,8 @@@
+      <orderEntry type="inheritedJdk" />
+      <orderEntry type="sourceFolder" forTests="false" />
+    </component>
+++  <component name="PyDocumentationSettings">
+++    <option name="format" value="PLAIN" />
+++    <option name="myDocStringFormat" value="Plain" />
+++  </component>
+  </module>
