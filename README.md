@@ -55,4 +55,4 @@
 
 상세한 보고서는 별도 문서를 참조.
 ## 보고서 다운로드
-[보고서 PDF 다운로드](./report/my_report.pdf)
+[보고서 PDF 다운로드](https://www.notion.so/Codeitteam7-AI-Health-Eat-295bfba1db0b80f7a3b2f9c316ade71b?source=copy_link)
