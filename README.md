@@ -1,31 +1,58 @@
-# 환경 세팅 가이드
+# [AI] 헬스잇(Health Eat) 알약 검출 프로젝트 (내부 실험)
 
-## 레포지토리 최신화:
-- git pull origin main
+헬스케어 스타트업 '헬스잇(Health Eat)'의 AI 엔지니어링 팀으로서, 사용자가 촬영한 알약 사진에서 최대 4개의 알약 이름과 위치를 검출하는 모델을 개발합니다.
 
-## 환경 생성 (처음이라면)
-- conda env create -f environment.yml
-- conda activate codeit_project_env
+## 1. 우리 팀 (Team)
 
-## 이미 환경이 있다면 업데이트만:
-conda env update -f environment.yml --prune
+| 이름 | 역할 |
+| :--- | :--- |
+| **이승완(팀장, PM)** | EDA, 초기 베이스라인 코드, 의사 레이블링, 모델링 (Optimizer) |
+| **이경식** | 모델링 (Model Size / Version) |
+| **오현민** | 의사 레이블링, 모델링 (ImgSize / LR) |
+| **최준영** | 의사 레이블링, 모델링 (Augmentation) |
+| **박병호** | EDA, 데이터 분석 |
 
-## GPU 팀원 
-### CUDA 11.8:
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+## 2. 프로젝트 개요
 
-### CUDA 12.1:
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+**초기 문제**: yolov8s로 Kaggle 리더보드 점수 0.986을 달성했으나, Test 셋과 Train 셋이 거의 동일하여 mAP 지표가 변별력을 상실함을 확인.
 
-### Mac 팀원
-pip install torch torchvision torchaudio
+**신규 목표**: mAP 0.99 달성을 기본값으로 간주. **"가장 낮은 Validation Loss(최고의 안정성)"**와 **"최소 학습 비용(Cost)"**을 확보하는 최적의 모델을 탐색하는 것으로 목표를 전환.
 
-## 장치 확인 코드
-    import torch
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-    elif torch.backends.mps.is_available():
-        device = torch.device("mps")
-    else:
-        device = torch.device("cpu")
-    print("Using device:", device)
+## 3. 데이터 파이프라인
+
+**EDA 및 정제**: 원본(1489개)에서 라벨 불일치 [오류셋 840개] 식별 및 이상치 17개 제거.
+
+**의사 레이블링**: [오류셋 840개]의 라벨을 Roboflow로 복원.
+
+**최종 데이터셋**: [클린셋 632개] + [복원셋 840개] = 총 1,472개의 통합 데이터셋 구축.
+
+**분할**: Train (70%) / Val (15%) / Test (15%)로 계층 분할하여 내부 실험 진행.
+
+## 4. 핵심 발견 (Key Findings)
+
+**3대 편향 식별**: EDA 결과, 데이터셋에 '환경' (동일 조명/배경), '공간' (좌측 하단 밀집), '특징' 편향이 존재함을 확인.
+
+**mAP 0.99의 진실**: t-SNE(실루엣 -0.49) 분석 결과, '색상/형태' 등 일반 특징으로는 클래스 구분이 불가능했음. YOLO가 mAP 0.99를 달성한 이유는 '일반 특징'이 아닌, 알약 표면의 **'텍스트 각인(Imprint)'**이라는 '미세 특징'에 과적합되었기 때문임을 규명.
+
+## 5. 최종 결론: 최적 모델 확정
+
+'mAP/효율' 기준(가설 A)과 'Loss/안정성' 기준(가설 B)을 최종 Test 셋에서 검증한 결과, '가설 A' 기반의 '검증 2' 모델이 Test mAP 0.9861과 Val Loss 1.02를 동시에 달성하며 '성능'과 '안정성' 모두에서 가장 우수함을 입증.
+
+### 최종 제안 모델 (Team Baseline)
+
+- **Model**: yolov8n
+- **Optimizer**: AdamW
+- **ImgSize**: 640
+- **Augmentation (최적 조합)**:
+  - lr0 = 0.0005
+  - mosaic = 0.5
+  - hsv_s = 0.2 (채도)
+  - hsv_v = 0.4 (명도)
+
+이 조합은 '텍스트 각인' 특징(대비 강화)을 학습하는 동시에, '느린 학습률'과 'Mosaic'로 안정적인 일반화 성능까지 확보한 가장 균형 잡힌 최적의 솔루션으로 결론 내림.
+
+## 6. 상세 보고서
+
+상세한 보고서는 별도 문서를 참조.
+## 보고서 다운로드
+[보고서 PDF 다운로드](https://www.notion.so/Codeitteam7-AI-Health-Eat-295bfba1db0b80f7a3b2f9c316ade71b?source=copy_link)
