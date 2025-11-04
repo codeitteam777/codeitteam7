@@ -5,8 +5,8 @@
 ## 🚀 최소 비용, 최고 안정성을 위한 알약 객체 검출 모델 최적화
 | Stat | Value | | Stat | Value |
 |------|-------|---|------|-------|
-| **Final Test mAP@50-95** | **0.9808** | | **Test Precision** | **0.9862** |
-| **Test Recall** | **0.9795** | | **Model** | **YOLOv8n (Nano)** |
+| **Final Test mAP@50-95** | **0.9808** | | **Precision** | **0.9862** |
+| **Recall** | **0.9795** | | **Model** | **YOLOv8n (Nano)** |
 | **Optimizer** | **AdamW** | | | |
 
 ## 1. 🛠️ 개발 및 분석 스택 (Development Stack)
