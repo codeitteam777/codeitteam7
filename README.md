@@ -60,7 +60,7 @@
 ├── 📂 docs/                       # 최종보고서 파일
 ├── 📂 config/                     # yaml 파일
 ├── 📂 img/                        # img 파일
-├── 📂 lagacy/                     # 이전 파일
+├── 📂 legacy/                     # 이전 파일
 ├── 📂 data/                       # (개별 private 데이터)
 │   ├── 📂 raw/                    # 원본 데이터
 │   ├── 📂 processed/              # 전처리된 데이터
