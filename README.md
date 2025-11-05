@@ -91,4 +91,4 @@
 
 박병호 : https://www.notion.so/2a25df876c2080499878e5c12d5d1e76?source=copy_link
 
-최준영 :
+최준영 : https://www.notion.so/29da459f142180408234c9b1e4262fca?source=copy_link
