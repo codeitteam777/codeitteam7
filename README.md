@@ -79,3 +79,16 @@
 상세한 보고서는 별도 문서를 참조.
 ## 보고서 다운로드
 [보고서 PDF 다운로드](docs/Codeitteam7_AI_헬스잇(Health_Eat)_알약_검출_프로젝트_내부_실험_보고서.pdf)
+
+
+## 개인 협업일지
+
+이승완 : https://www.notion.so/292bfba1db0b80b88c23f3f789db0d73?source=copy_link
+
+오현민 : https://www.notion.so/7-2a1e0d876d7580c085aae4b84acc4761?source=copy_link
+
+이경식 : https://www.notion.so/2a23a594a4d080bd9543ce1842bf85c5?source=copy_link
+
+박병호 : https://www.notion.so/2a25df876c2080499878e5c12d5d1e76
+
+최준영 :
