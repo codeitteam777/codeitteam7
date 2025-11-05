@@ -89,6 +89,6 @@
 
 이경식 : https://www.notion.so/2a23a594a4d080bd9543ce1842bf85c5?source=copy_link
 
-박병호 : [https://www.notion.so/2a25df876c2080499878e5c12d5d1e76
-](https://www.notion.so/2a25df876c2080499878e5c12d5d1e76?source=copy_link)
+박병호 : https://www.notion.so/2a25df876c2080499878e5c12d5d1e76?source=copy_link
+
 최준영 :
